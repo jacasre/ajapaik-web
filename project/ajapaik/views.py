@@ -55,7 +55,7 @@ from project.ajapaik.models import Photo, Profile, Source, Device, DifficultyFee
     Newsletter, Dating, DatingConfirmation, Video
 from project.ajapaik.serializers import CuratorAlbumSelectionAlbumSerializer, CuratorMyAlbumListAlbumSerializer, \
     CuratorAlbumInfoSerializer, FrontpageAlbumSerializer, DatingSerializer, VideoSerializer
-from project.ajapaik.settings import DATING_POINTS, DATING_CONFIRMATION_POINTS, \
+from project.settings import DATING_POINTS, DATING_CONFIRMATION_POINTS, \
     CURATOR_FLICKR_ENABLED, CURATOR_THEN_AND_NOW_CREATION_DISABLED
 from project.ajapaik.then_and_now_tours import user_has_confirmed_email
 from project.utils import calculate_thumbnail_size, convert_to_degrees, calculate_thumbnail_size_max_height, \

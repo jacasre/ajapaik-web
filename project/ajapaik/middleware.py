@@ -1,7 +1,8 @@
 from django.utils.cache import patch_vary_headers
 from django.utils import translation
 from django.shortcuts import redirect
-from project.ajapaik import settings
+from project import settings
+
 
 class ForceDefaultLanguageMiddleware(object):
     """
@@ -16,6 +17,7 @@ class ForceDefaultLanguageMiddleware(object):
     def process_request(self, request):
         if request.META.has_key('HTTP_ACCEPT_LANGUAGE'):
             del request.META['HTTP_ACCEPT_LANGUAGE']
+
 
 class SessionBasedLocaleWithRedirectMiddleware(object):
     """

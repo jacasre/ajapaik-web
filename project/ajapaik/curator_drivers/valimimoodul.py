@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from requests import post
 
 from project.ajapaik.models import Photo, AlbumPhoto, Album
-from project.ajapaik.settings import AJAPAIK_VALIMIMOODUL_URL, MEDIA_URL
+from project.settings import AJAPAIK_VALIMIMOODUL_URL, MEDIA_URL
 
 
 class ValimimoodulDriver(object):

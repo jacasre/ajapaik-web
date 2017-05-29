@@ -3,7 +3,7 @@ from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 from django.utils.text import normalize_newlines
 
-from project.ajapaik import settings
+from project import settings
 
 register = Library()
 

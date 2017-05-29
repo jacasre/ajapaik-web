@@ -1,6 +1,6 @@
 import codecs
 from django.core.management.base import BaseCommand
-from project.ajapaik.settings import ABSOLUTE_PROJECT_ROOT
+from project.settings import ABSOLUTE_PROJECT_ROOT
 
 
 class Command(BaseCommand):

@@ -25,7 +25,7 @@ from rest_framework.renderers import JSONRenderer
 from sorl.thumbnail import get_thumbnail, delete
 
 from project.ajapaik.models import TourRephoto, Photo, Tour, TourPhotoOrder, TourGroup, Profile, Licence, TourUniqueView
-from project.ajapaik.settings import THEN_AND_NOW_TOUR_RANDOM_PHOTO_MAX_DIST, THEN_AND_NOW_TOUR_DEFAULT_PHOTO_COUNT, \
+from project.settings import THEN_AND_NOW_TOUR_RANDOM_PHOTO_MAX_DIST, THEN_AND_NOW_TOUR_DEFAULT_PHOTO_COUNT, \
     THEN_AND_NOW_TOUR_RANDOM_PHOTO_MIN_DIST
 
 

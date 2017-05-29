@@ -28,7 +28,7 @@ from project.ajapaik.facebook import APP_ID
 from project.ajapaik.forms import ApiAlbumNearestForm, ApiAlbumStateForm, ApiRegisterForm, ApiPhotoUploadForm, \
     ApiUserMeForm, ApiPhotoStateForm
 from project.ajapaik.models import Album, Photo, Profile, Licence
-from project.ajapaik.settings import API_DEFAULT_NEARBY_PHOTOS_RANGE, API_DEFAULT_NEARBY_MAX_PHOTOS, FACEBOOK_APP_SECRET, \
+from project.settings import API_DEFAULT_NEARBY_PHOTOS_RANGE, API_DEFAULT_NEARBY_MAX_PHOTOS, FACEBOOK_APP_SECRET, \
     GOOGLE_CLIENT_ID
 
 

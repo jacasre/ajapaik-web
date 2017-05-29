@@ -4,7 +4,7 @@ from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.utils import translation
 from project.ajapaik.models import Source, Licence, Album, Photo, AlbumPhoto, GeoTag
-from project.ajapaik.settings import FLICKR_API_KEY
+from project.settings import FLICKR_API_KEY
 
 
 # This script was made for a single use, review before running

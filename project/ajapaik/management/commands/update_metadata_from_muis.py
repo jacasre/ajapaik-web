@@ -3,7 +3,7 @@ from json import loads
 from django.core.management.base import BaseCommand
 from django.utils.translation import activate
 import requests
-from project.ajapaik import settings
+from project import settings
 from project.ajapaik.models import Photo, PhotoMetadataUpdate
 
 

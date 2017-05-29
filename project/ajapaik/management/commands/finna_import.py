@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from math import ceil
 from django.utils import translation
 from project.ajapaik.models import Source, Photo, Album, AlbumPhoto, Licence
-from project.ajapaik.settings import ABSOLUTE_PROJECT_ROOT
+from project.settings import ABSOLUTE_PROJECT_ROOT
 
 
 # This script was made for a single use, review before running

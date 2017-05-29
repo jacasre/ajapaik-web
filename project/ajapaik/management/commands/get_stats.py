@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 from django.db.models import Q
 
 from project.ajapaik.models import Profile, Photo, Points, PhotoComment, PhotoLike, _calc_trustworthiness
-from project.ajapaik.settings import ABSOLUTE_PROJECT_ROOT
+from project.settings import ABSOLUTE_PROJECT_ROOT
 
 reload(sys)
 sys.setdefaultencoding('utf8')

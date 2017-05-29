@@ -8,7 +8,7 @@ from oauth2client import xsrfutil
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.django_orm import Storage
 
-from project.ajapaik import settings
+from project import settings
 from project.ajapaik.models import CredentialsModel, Profile
 
 CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), 'client_secrets.json')

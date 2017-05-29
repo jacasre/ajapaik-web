@@ -3,7 +3,7 @@ from json import dumps
 import flickrapi
 
 from project.ajapaik.models import Photo, AlbumPhoto, Album
-from project.ajapaik.settings import FLICKR_API_KEY, FLICKR_API_SECRET
+from project.settings import FLICKR_API_KEY, FLICKR_API_SECRET
 
 
 class FlickrCommonsDriver(object):

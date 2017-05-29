@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.management import BaseCommand
 from django.utils import translation
-import project.ajapaik.settings
+import project.settings
 import requests
 from project.ajapaik.models import Area, Album, Source, Photo, AlbumPhoto
 

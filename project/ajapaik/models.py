@@ -43,7 +43,7 @@ from requests import get
 from sklearn.cluster import DBSCAN
 from sorl.thumbnail import get_thumbnail, delete
 
-from project.ajapaik.settings import GOOGLE_API_KEY, DEBUG, STATIC_ROOT, MEDIA_ROOT
+from project.settings import GOOGLE_API_KEY, DEBUG, STATIC_ROOT, MEDIA_ROOT
 from project.utils import angle_diff
 from project.utils import average_angle
 
@@ -731,6 +731,7 @@ class PhotoMetadataUpdate(Model):
         db_table = 'project_photometadataupdate'
 
 
+# FIXME: Unused model?
 class PhotoComment(Model):
     photo = ForeignKey('Photo', related_name='comments')
     fb_comment_id = CharField(max_length=255, unique=True)

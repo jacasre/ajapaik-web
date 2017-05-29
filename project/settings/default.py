@@ -24,7 +24,7 @@ CURATOR_THEN_AND_NOW_CREATION_DISABLED = True
 
 AJAPAIK_FACEBOOK_LINK = 'https://www.facebook.com/ajapaik'
 
-ABSOLUTE_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+ABSOLUTE_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 ABSOLUTE_TEMPLATES_PATH = '%s/templates' % ABSOLUTE_PROJECT_ROOT
 
 if not ABSOLUTE_PROJECT_ROOT in sys.path:
@@ -39,11 +39,11 @@ MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 STATICFILES_DIRS = (
-    '%s/project/ajapaik/static' % ABSOLUTE_PROJECT_ROOT,
+    '%s/project/static' % ABSOLUTE_PROJECT_ROOT,
 )
 
 LOCALE_PATHS = (
-    '%s/project/ajapaik/locale' % ABSOLUTE_PROJECT_ROOT,
+    '%s/project/locale' % ABSOLUTE_PROJECT_ROOT,
 )
 
 ADMINS = (
@@ -144,7 +144,7 @@ TEMPLATES = [
         },
         'DIRS': (
             ABSOLUTE_TEMPLATES_PATH,
-            '%s/project/ajapaik/templates' % ABSOLUTE_PROJECT_ROOT
+            '%s/project/templates' % ABSOLUTE_PROJECT_ROOT
         )
     },
 ]
@@ -173,7 +173,6 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'django_comments_xtd',
     'django_comments',
-    'project.ajapaik',
     'django_extensions',
     'sorl.thumbnail',
     'rest_framework',
@@ -183,6 +182,8 @@ INSTALLED_APPS = (
     'registration',
     'bootstrap3',
     'django_bootstrap_dynamic_formsets',
+
+    'project.ajapaik',
 )
 
 ALLOWED_HOSTS = ['.ajapaik.ee', '217.146.78.74']
@@ -190,8 +191,7 @@ ALLOWED_HOSTS = ['.ajapaik.ee', '217.146.78.74']
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://127.0.0.1:8983/solr/collection1',
-        'TIMEOUT': 60 * 5,
+        'URL': 'http://127.0.0.1:8983/solr/collection1'
     }
 }
 

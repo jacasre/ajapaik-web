@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from django_comments_xtd.admin import XtdCommentsAdmin
 from sorl.thumbnail import delete as sorl_delete
 
-from project.ajapaik import settings
+from project import settings
 from project.ajapaik.models import Photo, GeoTag, Profile, Source, Skip, Action, Album, CSVPhoto, Points, Area, \
     AlbumPhoto, Licence, Device, Newsletter, Dating, Tour, TourRephoto, \
     DatingConfirmation, Video, TourGroup, NorwegianCSVPhoto, MyXtdComment
