@@ -1746,4 +1746,27 @@ var map,
 
         return false;
     });
+
+    var $commentForm;
+
+    $(document).on('click', '#ajapaik-comments-reply-button', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        var commentFormOriginal = $('#comment-form[data-comment-id=main]')[0].outerHTML;
+
+        if($commentForm){
+            $commentForm.remove();
+        }
+
+        var currentActiveCommentFormID = $this.data('id');
+
+        $commentForm = $this.closest('.media').append(commentFormOriginal).find('#comment-form');
+        $commentForm.data('comment-id', currentActiveCommentFormID);
+
+        var reply_to_hidden_field = $commentForm.find('#id_reply_to');
+        $(reply_to_hidden_field).attr('value', currentActiveCommentFormID);
+
+        // return false;
+    });
+
 }(jQuery));

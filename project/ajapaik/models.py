@@ -6,9 +6,9 @@ from json import loads
 from math import degrees
 from time import sleep
 from urllib2 import urlopen
-
 import numpy
 import os
+
 from PIL import Image
 from bulk_update.manager import BulkUpdateManager
 from django.contrib.auth.models import User
@@ -1201,11 +1201,11 @@ class CSVPhoto(Photo):
 
         # Possible fix for proxy models not getting their auto-generated permissions and stuff
         # class Migration(SchemaMigration):
-        # 	def forwards(self, orm):
-        # 		orm.send_create_signal('project', ['CSVPhoto'])
+        #   def forwards(self, orm):
+        #       orm.send_create_signal('project', ['CSVPhoto'])
         #
-        # 	def backwards(self, orm):
-        # 		pass
+        #   def backwards(self, orm):
+        #       pass
 
 
 class NorwegianCSVPhoto(Photo):
@@ -1456,3 +1456,28 @@ class MyXtdComment(XtdComment):
 
     def dislike_count(self):
         return self.flags.filter(flag=DISLIKEDIT_FLAG).count()
+
+    @classmethod
+    def full_tree_from_queryset(cls, queryset):
+        result = []
+
+        def _get_comments_dict(obj):
+            comment_dict = {'comment': obj}
+            children = queryset.filter(parent_id=obj.id).exclude(pk=obj.pk)
+
+            children_dict = []
+
+            for child in children:
+                child_dict = _get_comments_dict(child)
+                children_dict.append(child_dict)
+
+            comment_dict['children'] = children_dict
+
+            return comment_dict
+
+        for obj in queryset:
+            if obj.parent_id == obj.pk:
+                comment_dict = _get_comments_dict(obj)
+                result.append(comment_dict)
+
+        return result

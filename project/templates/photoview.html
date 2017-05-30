@@ -1,5 +1,5 @@
 {% extends "base_bootstrap.html" %}
-{% load i18n comments %}
+{% load i18n comments comments_xtd ajapaik_templatetags %}
 
 {% block header %}
     {% include "_header.html" %}
@@ -164,11 +164,15 @@
                 {% endif %}
                 <div class="row-fluid" id="ajapaik-photoview-comments-section">
                     <div class="comments">
-                        {% if rephoto %}
-                            {% render_comment_list for rephoto %}
-                        {% else %}
-                            {% render_comment_list for photo %}
-                        {% endif %}
+                        <ul class="media-list" id="comments">
+                            {% if rephoto %}
+                                {% get_xtdcomment_full_tree for rephoto as xtdcomments_list %}
+                            {% else %}
+                                {% get_xtdcomment_full_tree for photo as xtdcomments_list %}
+                            {% endif %}
+
+                            {% include "django_comments_xtd/comment_tree.html" with comments=xtdcomments_list %}
+                        </ul>
                     </div>
                     <div class="comment">
                         <h4>{% trans "Your comment" %}</h4>

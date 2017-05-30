@@ -36,6 +36,7 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt, csrf_protect
 from django_comments.models import CommentFlag
 from django_comments.views.utils import next_redirect
+from django_comments.signals import comment_was_flagged
 from rest_framework.renderers import JSONRenderer
 from sorl.thumbnail import delete
 from sorl.thumbnail import get_thumbnail

@@ -4,7 +4,7 @@
     <a href="javaScript:void(0);" id="ajapaik-comment-form-register-link">{% trans "Identify yourself to comment" %}</a>
 {% else %}
     <form method="POST" data-comment-element="form" data-comment-id="{{ cid|default:'main' }}"
-          action="{% comment_form_target %}" class="form-horizontal">
+          action="{% comment_form_target %}" class="form-horizontal" id="comment-form">
         {% csrf_token %}
         <div class="hidden" data-comment-element="preview"></div>
         <fieldset>
