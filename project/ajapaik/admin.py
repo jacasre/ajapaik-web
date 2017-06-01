@@ -189,6 +189,18 @@ class MyUserAdmin(admin.ModelAdmin):
     form = autocomplete_light.modelform_factory(User, fields='__all__')
 
 
+class MyCommentAdmin(XtdCommentsAdmin):
+
+    fieldsets = (
+        (None,          {'fields': ('content_type', 'object_pk', 'site')}),
+        (_('Content'),  {'fields': ('user', 'user_name', 'user_email',
+                                  'user_url', 'comment', 'followup')}),
+        (_('Metadata'), {'fields': ('submit_date', 'ip_address',
+                                    'is_public', 'is_removed')}),
+        (_('Custom'),  {'fields': ('facebook_comment_id', 'comment_type')}),
+    )
+
+
 try:
     admin.site.unregister(User)
 except NotRegistered:
@@ -218,4 +230,4 @@ admin.site.register(Tour, TourAdmin)
 admin.site.register(TourGroup, TourGroupAdmin)
 admin.site.register(TourRephoto, TourRephotoAdmin)
 admin.site.register(Video, VideoAdmin)
-admin.site.register(MyXtdComment, XtdCommentsAdmin)
+admin.site.register(MyXtdComment, MyCommentAdmin)

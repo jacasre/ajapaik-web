@@ -297,6 +297,7 @@ class DatingSubmitForm(forms.ModelForm):
         super(DatingSubmitForm, self).__init__(*args, **kwargs)
         self.fields['start'].required = False
         self.fields['end'].required = False
+        self.fields['comment_obj'].required = False
 
 
 class DatingConfirmForm(forms.Form):

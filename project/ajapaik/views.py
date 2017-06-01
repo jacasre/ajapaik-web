@@ -34,6 +34,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt, csrf_protect
+from django.contrib.contenttypes.models import ContentType
 from django_comments.models import CommentFlag
 from django_comments.views.utils import next_redirect
 from django_comments.signals import comment_was_flagged
@@ -53,7 +54,7 @@ from project.ajapaik.forms import AddAlbumForm, AreaSelectionForm, AlbumSelectio
     PhotoUploadChoiceForm, UserPhotoUploadForm, UserPhotoUploadAddAlbumForm, CuratorWholeSetAlbumsSelectionForm
 from project.ajapaik.models import Photo, Profile, Source, Device, DifficultyFeedback, GeoTag, Points, \
     Album, AlbumPhoto, Area, Licence, Skip, _calc_trustworthiness, _get_pseudo_slug_for_photo, PhotoLike, \
-    Newsletter, Dating, DatingConfirmation, Video
+    Newsletter, Dating, DatingConfirmation, Video, MyXtdComment
 from project.ajapaik.serializers import CuratorAlbumSelectionAlbumSerializer, CuratorMyAlbumListAlbumSerializer, \
     CuratorAlbumInfoSerializer, FrontpageAlbumSerializer, DatingSerializer, VideoSerializer
 from project.settings import DATING_POINTS, DATING_CONFIRMATION_POINTS, \
@@ -2454,6 +2455,7 @@ def submit_dating(request):
     profile = request.get_user().profile
     form = DatingSubmitForm(request.POST.copy())
     confirm_form = DatingConfirmForm(request.POST)
+
     form.data['profile'] = profile.id
     if form.is_valid():
         dating = form.save(commit=False)
@@ -2464,6 +2466,26 @@ def submit_dating(request):
         p = form.cleaned_data['photo']
         dating_exists = Dating.objects.filter(profile=profile, raw=dating.raw, photo=p).exists()
         if not dating_exists:
+
+            comment_text = form.data.get('comment', '')
+            content_type_id = ContentType.objects.filter(app_label='ajapaik', model='photo').first().pk
+
+            comment = MyXtdComment.objects.create(
+                    user=request.get_user(),
+                    level=0,
+                    followup=False,
+                    is_public=True,
+                    is_removed=False,
+                    comment=comment_text,
+                    object_pk=form.data['photo'],
+                    # submit_date=datetime.datetime.now(),
+                    # facebook_comment_id=each.fb_comment_id,
+                    content_type_id=content_type_id,
+                    site_id=settings.SITE_ID,
+                    comment_type=MyXtdComment.DATING_TYPE
+                )
+            dating.comment_obj = comment
+
             dating.save()
             p.latest_dating = dating.created
             if not p.first_dating:

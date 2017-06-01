@@ -1264,16 +1264,21 @@ class Dating(Model):
         (YEAR, _('Year')),
     )
 
-    photo = ForeignKey('Photo', related_name='datings')
-    profile = ForeignKey('Profile', related_name='datings')
     raw = CharField(max_length=25, null=True, blank=True)
-    comment = TextField(blank=True, null=True)
+
     start = DateField(default=datetime.strptime('01011000', '%d%m%Y').date())
     start_approximate = BooleanField(default=False)
     start_accuracy = PositiveSmallIntegerField(choices=ACCURACY_CHOICES, blank=True, null=True)
     end = DateField(default=datetime.strptime('01013000', '%d%m%Y').date())
     end_approximate = BooleanField(default=False)
     end_accuracy = PositiveSmallIntegerField(choices=ACCURACY_CHOICES, blank=True, null=True)
+
+    comment_obj = OneToOneField('MyXtdComment', blank=True, null=True, related_name='datings')
+
+    # Unused
+    profile = ForeignKey('Profile', related_name='datings')
+    photo = ForeignKey('Photo', related_name='datings')
+    comment = TextField(blank=True, null=True)
     created = DateTimeField(auto_now_add=True)
     modified = DateTimeField(auto_now=True)
 
@@ -1419,7 +1424,15 @@ class Video(Model):
 
 
 class MyXtdComment(XtdComment):
+    DATING_TYPE, STANDARD_TYPE = range(2)
+
+    TYPE_CHOICES = (
+        (DATING_TYPE, _('Dating')),
+        (STANDARD_TYPE, _('Standard')),
+    )
+
     facebook_comment_id = CharField(max_length=255, blank=True, null=True)
+    comment_type = PositiveSmallIntegerField(choices=TYPE_CHOICES, default=STANDARD_TYPE)
 
     def save(self, **kwargs):
         super(MyXtdComment, self).save(**kwargs)
@@ -1459,25 +1472,34 @@ class MyXtdComment(XtdComment):
 
     @classmethod
     def full_tree_from_queryset(cls, queryset):
-        result = []
+        result = {'datings': [], 'comments': []}
 
-        def _get_comments_dict(obj):
+        queryset = queryset.filter(is_removed=False)
+
+        def _get_children_dict(obj, qs):
             comment_dict = {'comment': obj}
-            children = queryset.filter(parent_id=obj.id).exclude(pk=obj.pk)
+            children = qs.filter(parent_id=obj.id).exclude(pk=obj.pk)
 
             children_dict = []
 
             for child in children:
-                child_dict = _get_comments_dict(child)
+                child_dict = _get_children_dict(child, qs)
                 children_dict.append(child_dict)
 
             comment_dict['children'] = children_dict
 
             return comment_dict
 
-        for obj in queryset:
-            if obj.parent_id == obj.pk:
-                comment_dict = _get_comments_dict(obj)
-                result.append(comment_dict)
+        def _get_comments_dict(comment_type):
+            qs = queryset.filter(comment_type=comment_type)
+            final = []
+            for obj in qs:
+                if obj.parent_id == obj.pk:
+                    comment_dict = _get_children_dict(obj, qs)
+                    final.append(comment_dict)
+            return final
+
+        result['comments'] = _get_comments_dict(cls.STANDARD_TYPE)
+        result['datings'] = _get_comments_dict(cls.DATING_TYPE)
 
         return result

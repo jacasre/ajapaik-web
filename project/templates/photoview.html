@@ -164,15 +164,13 @@
                 {% endif %}
                 <div class="row-fluid" id="ajapaik-photoview-comments-section">
                     <div class="comments">
-                        <ul class="media-list" id="comments">
-                            {% if rephoto %}
-                                {% get_xtdcomment_full_tree for rephoto as xtdcomments_list %}
-                            {% else %}
-                                {% get_xtdcomment_full_tree for photo as xtdcomments_list %}
-                            {% endif %}
-
-                            {% include "django_comments_xtd/comment_tree.html" with comments=xtdcomments_list %}
-                        </ul>
+                        {% if rephoto %}
+                            {% get_xtdcomment_full_tree for rephoto as xtdcomments_list %}
+                        {% else %}
+                            {% get_xtdcomment_full_tree for photo as xtdcomments_list %}
+                        {% endif %}
+                        
+                        {% include "django_comments_xtd/list.html" with comments=xtdcomments_list %}
                     </div>
                     <div class="comment">
                         <h4>{% trans "Your comment" %}</h4>
