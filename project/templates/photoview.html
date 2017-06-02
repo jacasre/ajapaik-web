@@ -131,7 +131,46 @@
                         </ul>
                     </div>
                 </div>
-                <div class="row-fluid" id="ajp-dater-container"></div>
+
+                <div class="row-fluid" id="ajp-dater-container">
+                    
+                    <div class='panel panel-default' id='ajp-dater-panel'>
+                       <div class='panel-body'>
+                           <div class='well' id='ajp-dater-previous-datings-well'>
+                           
+
+
+                           </div>
+
+
+                           <div class='well' id='ajp-dater-tutorial-well'>
+                               <span></span>
+                               <button id='ajp-dater-close-tutorial-button'><i class='material-icons notranslate'>close</i></button>
+                           </div>
+                           <div class='well hidden' id='ajp-dater-anonymous-user-well'>
+                               <i class='material-icons notranslate'>account_circle</i><span></span>
+                           </div>
+                           <button id='ajp-dater-open-tutorial-button'><i class='material-icons notranslate'>info</i></button>
+                           <div class='well' id='ajp-dater-feedback-well'></div>
+                           <form class='form' id='ajp-dater-form'>
+                               <div class='form-inline'>
+                                   <div class='form-group'>
+                                       <input id='ajp-dater-input' type='text' class='form-control' placeholder='' />
+                                       <div class='btn btn-default' id='ajp-dater-toggle-comment-button'><i class='material-icons notranslate'>comment</i></div>
+                                   </div>
+                               </div>
+                               <div id='ajp-dater-feedback'></div>
+                               <input class='form-control hidden' placeholder='' type='text' id='ajp-dater-comment' />
+                               <div class='btn-group' role='group'>
+                                   <button type='button' id='ajp-dater-cancel-button' class='btn btn-default'><i class='material-icons notranslate'>close</i></button>
+                                   <button type='submit' id='ajp-dater-submit-button' class='btn btn-default'><i class='material-icons notranslate'>check</i></button>
+                               </div>
+                           </form>
+                       </div>
+                    </div>
+
+                </div>
+
                 {% if albums %}
                     <div class="row" style="margin-top: 10px;">
                     <br>
@@ -170,7 +209,10 @@
                             {% get_xtdcomment_full_tree for photo as xtdcomments_list %}
                         {% endif %}
                         
-                        {% include "django_comments_xtd/list.html" with comments=xtdcomments_list %}
+                        <ul class="media-list" id="comments">
+                            {% include "django_comments_xtd/comment_tree.html" with comments=xtdcomments_list.comments %}
+                        </ul>
+                        
                     </div>
                     <div class="comment">
                         <h4>{% trans "Your comment" %}</h4>

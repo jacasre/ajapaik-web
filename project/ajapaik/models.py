@@ -1476,6 +1476,8 @@ class MyXtdComment(XtdComment):
 
         queryset = queryset.filter(is_removed=False)
 
+        # Maybe using itertools/groupby or manual calculate (like in tree_from_queryset from django-comments-xtd)
+        # will be better than filter
         def _get_children_dict(obj, qs):
             comment_dict = {'comment': obj}
             children = qs.filter(parent_id=obj.id).exclude(pk=obj.pk)
