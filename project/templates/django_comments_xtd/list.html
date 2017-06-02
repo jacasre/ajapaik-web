@@ -1,12 +1,5 @@
 {% load i18n comments_xtd %}
 
-
-<h2>Datings</h2>
-<ul class="media-list">
-{% include "django_comments_xtd/datings.html" with datings=comments.datings %}
-</ul>
-
-<h2>Comments</h2>
 <ul class="media-list" id="comments">
     {% include "django_comments_xtd/comment_tree.html" with comments=comments.comments %}
 </ul>

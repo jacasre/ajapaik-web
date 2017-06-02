@@ -383,20 +383,49 @@
                 } else {
                     addClass = '';
                 }
-                if (v.comment) {
-                    commentStr = '<i>\"' + v.comment + '\"</i>';
+                if (v.comment_text) {
+                    commentStr = '<i>\"' + v.comment_text + '\"</i>';
                 }
                 if (v.fb_name) {
                     userStr = v.fb_name;
                 } else if (v.google_plus_name) {
                     userStr = v.google_plus_name;
-                } else if (v.full_name) {
-                    userStr = v.full_name;
+                } else if (v.comment_name) {
+                    userStr = v.comment_name;
                 } else {
                     userStr = gettext('Anonymous user');
                 }
                 reparsedInput = that.getValidDates(that.calculateDateFormats(that.extractApproximates(that.extractUserInput(v.raw))));
-                previousDatings.append('<div><b>' + userStr + '</b>: ' + that.generateDateString(reparsedInput) + ' ' + commentStr + '<span class="badge">' + v.confirmation_count + '</span><i onclick="window.confirmDating(' + v.id + ')" class="material-icons notranslate ajp-dater-confirm-button' + addClass + '" data-id="' + v.id + '" title="' + gettext("Confirm dating") + '">thumb_up</i></div>');
+
+                // Hard urls are bad; but anyway we need move some parts of dating-related code from js to html
+                var comment_like_url = "/comments/like/" + v.comment_id + '/';
+                var comment_like_count_url = "/comments/like-count/" + v.comment_id + '/';
+                var comment_dislike_count_url = "/comments/dislike-count/" + v.comment_id + '/';
+
+                var comment_html = $([
+                    '<div><b>' + userStr + '</b>: ',
+                        that.generateDateString(reparsedInput) + ' ' + commentStr,
+                        '<span class="badge" id="ajapaik-comments-like-count-' + v.comment_id + '">',
+                        v.comment_likes + '</span>',
+                        // '<i onclick="window.confirmDating(' + v.id + ')"',
+                        //     'class="material-icons notranslate ajp-dater-confirm-button' + addClass + '"',
+                        //     'data-id="' + v.id + '" title="' + gettext("Confirm dating") + '">',
+                        //         'thumb_up',
+                        // '</i>',
+                        '<a id="ajapaik-comments-like-button" data-id="' + v.comment_id + '"',
+                           'href="' + comment_like_url + '"',
+                           'data-like-count-url="' + comment_like_count_url + '"',
+                           'data-dislike-count-url="' + comment_dislike_count_url + '">',
+                                '<i title="' + gettext("Confirm dating") + '"',
+                                    'class="material-icons notranslate ajp-dater-confirm-button' + addClass + '">',
+                                        'thumb_up',
+                                '</i>',
+                        '</a>',
+                    '</div>'
+                ].join('\n'));
+                previousDatings.append(comment_html);
+
+                // previousDatings.append('<div><b>' + userStr + '</b>: ' + that.generateDateString(reparsedInput) + ' ' + commentStr + '<span class="badge">' + v.confirmation_count + '</span><i onclick="window.confirmDating(' + v.id + ')" class="material-icons notranslate ajp-dater-confirm-button' + addClass + '" data-id="' + v.id + '" title="' + gettext("Confirm dating") + '">thumb_up</i></div>');
             });
         };
         this.giveDatingSubmittedFeedback = function (confirmation) {

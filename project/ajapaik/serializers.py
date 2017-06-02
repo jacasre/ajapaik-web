@@ -39,9 +39,15 @@ class DatingSerializer(serializers.ModelSerializer):
     confirmation_count = serializers.IntegerField(source='confirmations.count')
     this_user_has_confirmed = serializers.BooleanField()
 
+    comment_name = serializers.CharField(source='comment_obj.user.profile.get_display_name')
+    comment_text = serializers.CharField(source='comment_obj.comment')
+    comment_likes = serializers.CharField(source='comment_obj.like_count')
+    comment_id = serializers.CharField(source='comment_obj.pk')
+
     class Meta:
         model = Dating
-        fields = ('id', 'comment', 'full_name', 'confirmation_count', 'raw', 'this_user_has_confirmed')
+        # comment_name/comment_text/comment_likes replacing full_name/comment/confirmation_count
+        fields = ('id', 'comment_text', 'comment_name', 'comment_likes', 'comment_id', 'comment', 'full_name', 'confirmation_count', 'raw', 'this_user_has_confirmed')
 
 
 class VideoSerializer(serializers.ModelSerializer):
