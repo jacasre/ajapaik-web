@@ -54,7 +54,7 @@ from project.ajapaik.forms import AddAlbumForm, AreaSelectionForm, AlbumSelectio
     PhotoUploadChoiceForm, UserPhotoUploadForm, UserPhotoUploadAddAlbumForm, CuratorWholeSetAlbumsSelectionForm
 from project.ajapaik.models import Photo, Profile, Source, Device, DifficultyFeedback, GeoTag, Points, \
     Album, AlbumPhoto, Area, Licence, Skip, _calc_trustworthiness, _get_pseudo_slug_for_photo, PhotoLike, \
-    Newsletter, Dating, DatingConfirmation, Video, MyXtdComment
+    Newsletter, Dating, DatingConfirmation, Video, MyXtdComment, Notification
 from project.ajapaik.serializers import CuratorAlbumSelectionAlbumSerializer, CuratorMyAlbumListAlbumSerializer, \
     CuratorAlbumInfoSerializer, FrontpageAlbumSerializer, DatingSerializer, VideoSerializer
 from project.settings import DATING_POINTS, DATING_CONFIRMATION_POINTS, \
@@ -619,6 +619,8 @@ def frontpage(request, album_id=None, page=None):
     else:
         title = _('Timepatch (Ajapaik)')
 
+    notifications = Notification.objects.filter(receivers=profile)
+
     return render_to_response('frontpage.html', RequestContext(request, {
         'is_frontpage': True,
         'title': title,
@@ -646,7 +648,8 @@ def frontpage(request, album_id=None, page=None):
         # 'total': data['total'],
         # 'photos': data['photos'],
         'is_photoset': data['is_photoset'],
-        'last_geotagged_photo_id': Photo.objects.order_by('-latest_geotag').first().id
+        'last_geotagged_photo_id': Photo.objects.order_by('-latest_geotag').first().id,
+        'notifications': notifications,
     }))
 
 
@@ -2235,6 +2238,7 @@ def update_like_state(request):
     if form.is_valid() and profile:
         p = form.cleaned_data['photo']
         like = PhotoLike.objects.filter(photo=p, profile=profile).first()
+
         if like:
             if like.level == 1:
                 like.level = 2
@@ -2253,6 +2257,7 @@ def update_like_state(request):
             )
             like.save()
             ret['level'] = 1
+
         like_sum = p.likes.aggregate(Sum('level'))['level__sum']
         if not like_sum:
             like_sum = 0

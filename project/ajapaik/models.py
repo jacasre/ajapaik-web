@@ -28,6 +28,7 @@ from django.db.models import Lookup
 from django.db.models import OneToOneField, DateField, FileField
 from django.db.models.fields import Field
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.shortcuts import redirect
 from django.template.defaultfilters import slugify
 from django.utils.dateformat import DateFormat
@@ -1505,3 +1506,50 @@ class MyXtdComment(XtdComment):
         result['datings'] = _get_comments_dict(cls.DATING_TYPE)
 
         return result
+
+
+class Notification(Model):
+
+    COMMENTED, ADDED_GEOTAG = range(2)
+
+    TYPE_CHOICES = (
+        (COMMENTED, _('commented')),
+        (ADDED_GEOTAG, _('added geotag')),
+    )
+    verb = PositiveSmallIntegerField(choices=TYPE_CHOICES)
+
+    action_content_type = ForeignKey(ContentType, related_name='action_notifcation')
+    action_object_id = PositiveIntegerField(null=True, blank=True)
+    action_object = GenericForeignKey('action_content_type', 'action_object_id')
+
+    target_content_type = ForeignKey(ContentType, null=True, blank=True, related_name='target_notifcation')
+    target_object_id = PositiveIntegerField(null=True, blank=True)
+    target_object = GenericForeignKey('target_content_type', 'target_object_id')
+
+    sender = ForeignKey('Profile')
+    receivers = ManyToManyField('Profile', related_name='notifications')
+
+    class Meta:
+        db_table = 'project_notification'
+
+    def __unicode__(self):
+        return 'Send: %s Verb:%s Action:%s Target:%s' % (self.sender.user.username,
+                                                         self.get_verb_display(), self.action_object, self.target_object)
+
+
+@receiver(post_save, sender=MyXtdComment)
+def create_notification_for_comment(instance, **kwargs):
+
+    if kwargs.get('created'):
+        comment = instance
+        photo = Photo.objects.filter(pk=instance.object_pk).first()
+        profile = instance.user.profile
+        notification = Notification.objects.create(sender=profile,
+                                                   target_object=photo,
+                                                   verb=Notification.COMMENTED,
+                                                   action_object=comment)
+
+        for like in photo.likes.all():
+            notification.receivers.add(like.profile)
+
+    # Notification.objects.filter(receivers__id=some_profile.id)

@@ -96,6 +96,23 @@
                                 {% include "_block_leaderboard.html" %}
                             {% endif %}
                         </ul>
+                        {% if notifications %}
+                            <h4>Notifications</h4>
+                            <ul style="padding-left: 10px;">
+                                {% for notification in notifications %}
+                                    <li style="display: block;">
+                                        {{notification.sender.user.username}}
+                                        {{notification.get_verb_display}}
+                                        {% if notification.target_object.title %}
+                                            {{notification.target_object.title}}
+                                        {% else %}
+                                            {{notification.target_object.description}}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        
                         {% if request.user.profile.is_legit %}
                             {% with profile=request.user.profile user=request.user %}
                                 <div class="facebook-connected">

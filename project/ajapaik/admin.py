@@ -11,7 +11,7 @@ from sorl.thumbnail import delete as sorl_delete
 from project import settings
 from project.ajapaik.models import Photo, GeoTag, Profile, Source, Skip, Action, Album, CSVPhoto, Points, Area, \
     AlbumPhoto, Licence, Device, Newsletter, Dating, Tour, TourRephoto, \
-    DatingConfirmation, Video, TourGroup, NorwegianCSVPhoto, MyXtdComment
+    DatingConfirmation, Video, TourGroup, NorwegianCSVPhoto, MyXtdComment, Notification
 
 
 class CSVUploadAdmin(admin.ModelAdmin):
@@ -231,3 +231,4 @@ admin.site.register(TourGroup, TourGroupAdmin)
 admin.site.register(TourRephoto, TourRephotoAdmin)
 admin.site.register(Video, VideoAdmin)
 admin.site.register(MyXtdComment, MyCommentAdmin)
+admin.site.register(Notification)
