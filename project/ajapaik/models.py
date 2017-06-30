@@ -1510,11 +1510,13 @@ class MyXtdComment(XtdComment):
 
 class Notification(Model):
 
-    COMMENTED, ADDED_GEOTAG = range(2)
+    COMMENTED, ADDED_GEOTAG, ADDED_DATING, ADDED_LIKE = range(4)
 
     TYPE_CHOICES = (
         (COMMENTED, _('commented')),
-        (ADDED_GEOTAG, _('added geotag')),
+        (ADDED_GEOTAG, _('added a geotag to')),
+        (ADDED_DATING, _('added a dating to')),
+        (ADDED_LIKE, _('liked')),
     )
     verb = PositiveSmallIntegerField(choices=TYPE_CHOICES)
 
@@ -1529,6 +1531,10 @@ class Notification(Model):
     sender = ForeignKey('Profile')
     receivers = ManyToManyField('Profile', related_name='notifications')
 
+    def get_url(self):
+        if isinstance(self.target_object, Photo):
+            return(self.target_object.get_absolute_url())
+
     class Meta:
         db_table = 'project_notification'
 
@@ -1538,18 +1544,37 @@ class Notification(Model):
 
 
 @receiver(post_save, sender=MyXtdComment)
+@receiver(post_save, sender=GeoTag)
+@receiver(post_save, sender=PhotoLike)
 def create_notification_for_comment(instance, **kwargs):
 
     if kwargs.get('created'):
-        comment = instance
-        photo = Photo.objects.filter(pk=instance.object_pk).first()
-        profile = instance.user.profile
+        if isinstance(instance, MyXtdComment):
+            action_object = instance
+            photo = Photo.objects.filter(pk=instance.object_pk).first()
+            profile = instance.user.profile
+
+            if instance.comment_type == MyXtdComment.DATING_TYPE:
+                verb = Notification.ADDED_DATING
+            elif instance.comment_type == MyXtdComment.STANDARD_TYPE:
+                verb = Notification.COMMENTED
+
+        elif isinstance(instance, GeoTag):
+            action_object = instance
+            photo = instance.photo
+            profile = instance.user
+            verb = Notification.ADDED_GEOTAG
+
+        elif isinstance(instance, PhotoLike):
+            action_object = instance
+            photo = instance.photo
+            profile = instance.profile
+            verb = Notification.ADDED_LIKE
+
         notification = Notification.objects.create(sender=profile,
                                                    target_object=photo,
-                                                   verb=Notification.COMMENTED,
-                                                   action_object=comment)
+                                                   verb=verb,
+                                                   action_object=action_object)
 
         for like in photo.likes.all():
             notification.receivers.add(like.profile)
-
-    # Notification.objects.filter(receivers__id=some_profile.id)

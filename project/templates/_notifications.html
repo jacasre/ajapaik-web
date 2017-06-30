@@ -1,0 +1,24 @@
+
+<h4>Notifications</h4>
+<ul style="padding-left: 10px;">
+    {% for notification in notifications %}
+        <li style="display: block;">
+            <a href="{{notification.get_url}}">
+                {% if notification.sender.user.first_name %}
+                    {{notification.sender.user.first_name}}
+                {% else %}
+                    {{notification.sender.user.username}}
+                {% endif %}
+
+                {{notification.get_verb_display}}
+                {% if notification.target_object.title %}
+                    {{notification.target_object.title}}
+                {% else %}
+                    {{notification.target_object.description}}
+                {% endif %}
+            </a>
+        </li>
+    {% empty %}
+        No notifications yet.
+    {% endfor %}
+</ul>

@@ -86,32 +86,20 @@
                     </a>
 
                     <div class="score_container">
+                        
                         <h4>
-                            <a id="full_leaderboard" href="#">
-                                {% trans "Leaderboard" %}
-                            </a>
+                            <a id="full_leaderboard" href="#"> {% trans "Leaderboard" %}</a>
                         </h4>
+
                         <ul class="scoreboard">
                             {% if leaderboard %}
                                 {% include "_block_leaderboard.html" %}
                             {% endif %}
                         </ul>
-                        {% if notifications %}
-                            <h4>Notifications</h4>
-                            <ul style="padding-left: 10px;">
-                                {% for notification in notifications %}
-                                    <li style="display: block;">
-                                        {{notification.sender.user.username}}
-                                        {{notification.get_verb_display}}
-                                        {% if notification.target_object.title %}
-                                            {{notification.target_object.title}}
-                                        {% else %}
-                                            {{notification.target_object.description}}
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
+
+                        <div class="notifications-wrapper">
+                        </div>
+
                         
                         {% if request.user.profile.is_legit %}
                             {% with profile=request.user.profile user=request.user %}

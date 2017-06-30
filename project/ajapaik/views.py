@@ -619,8 +619,6 @@ def frontpage(request, album_id=None, page=None):
     else:
         title = _('Timepatch (Ajapaik)')
 
-    notifications = Notification.objects.filter(receivers=profile)
-
     return render_to_response('frontpage.html', RequestContext(request, {
         'is_frontpage': True,
         'title': title,
@@ -649,7 +647,6 @@ def frontpage(request, album_id=None, page=None):
         # 'photos': data['photos'],
         'is_photoset': data['is_photoset'],
         'last_geotagged_photo_id': Photo.objects.order_by('-latest_geotag').first().id,
-        'notifications': notifications,
     }))
 
 
@@ -1646,6 +1643,7 @@ def leaderboard(request, album_id=None):
         template = '_block_leaderboard.html'
     else:
         template = 'leaderboard.html'
+
     # FIXME: this shouldn't be necessary, there are easier ways to construct URLs
     site = Site.objects.get_current()
     return render_to_response(template, RequestContext(request, {
@@ -1654,7 +1652,18 @@ def leaderboard(request, album_id=None):
         'hostname': 'https://%s' % (site.domain,),
         'leaderboard': general_leaderboard,
         'album_leaderboard': album_leaderboard,
-        'ajapaik_facebook_link': settings.AJAPAIK_FACEBOOK_LINK
+        'ajapaik_facebook_link': settings.AJAPAIK_FACEBOOK_LINK,
+    }))
+
+
+def notifications(request):
+    profile = request.get_user().profile
+    notifications = Notification.objects.filter(receivers=profile).order_by('-id')[:5]
+
+    template = '_notifications.html'
+
+    return render_to_response(template, RequestContext(request, {
+        'notifications': notifications,
     }))
 
 

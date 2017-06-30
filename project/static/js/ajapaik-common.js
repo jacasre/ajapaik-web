@@ -2,6 +2,7 @@
 /*global google*/
 /*global _gaq*/
 /*global leaderboardUpdateURL*/
+/*global notificationsURL*/
 /*global gettext*/
 /*global BigScreen*/
 /*global photoLikeURL*/
@@ -42,6 +43,7 @@ var map,
     showScoreboard,
     hideScoreboard,
     updateLeaderboard,
+    updateNotifications,
     now,
     paneNow,
     firstPaneDone,
@@ -515,6 +517,11 @@ var map,
         }
     };
 
+    updateNotifications = function () {
+        var target = $('.score_container');
+        target.find('.notifications-wrapper').load(notificationsURL);
+    };
+
     $(document).on('click', '#ajapaik-header-grid-button', function (e) {
         if (!window.isPhotoview) {
             e.preventDefault();
@@ -586,6 +593,7 @@ var map,
 
     $(document).on('click', '#ajapaik-header-profile-button', function (e) {
         e.preventDefault();
+        window.updateNotifications();
         if (!window.isTop50 && !window.isLeaderboard) {
             window.updateLeaderboard();
         }
