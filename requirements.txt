@@ -2,12 +2,12 @@ appdirs
 asn1crypto
 cffi
 cryptography
-Django==1.9.13
+Django==1.11.14
 django-admin-tools
 django-appconf
 django-autocomplete-light==2.3.3
 django-autoslug
-django-allauth==0.34
+django-allauth
 django-bootstrap-dynamic-formsets
 django-bootstrap3
 django-bulk-update

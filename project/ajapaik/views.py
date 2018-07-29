@@ -30,7 +30,8 @@ from django.db.models import Sum, Q, Count, F
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
-from django.shortcuts import render_to_response
+#from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils import timezone
@@ -144,7 +145,7 @@ def get_general_info_modal_content(request):
             "user_rephotographed_photos": 0,
         }
 
-    return render_to_response("_general_info_modal_content.html", RequestContext(request, ret))
+    return render(request, "_general_info_modal_content.html", RequestContext(request, ret))
 
 
 def get_album_info_modal_content(request):
@@ -220,7 +221,7 @@ def get_album_info_modal_content(request):
         ret['share_gallery_link'] = request.build_absolute_uri(
             reverse('project.ajapaik.views.frontpage')) + '?album=' + album_id_str
 
-        return render_to_response('_info_modal_content.html', RequestContext(request, ret))
+        return render(request, '_info_modal_content.html', RequestContext(request, ret))
 
     return HttpResponse('Error')
 
@@ -602,7 +603,7 @@ def game(request):
     ret["user_has_likes"] = user_has_likes
     ret["user_has_rephotos"] = user_has_rephotos
 
-    return render_to_response("game.html", RequestContext(request, ret))
+    return render(request, "game.html", ret)
 
 
 def fetch_stream(request):
@@ -675,7 +676,7 @@ def frontpage(request, album_id=None, page=None):
     else:
         title = _('Timepatch (Ajapaik)')
 
-    return render_to_response('frontpage.html', RequestContext(request, {
+    return render(request, 'frontpage.html', {
         'is_frontpage': True,
         'title': title,
         'hostname': 'https://%s' % (site.domain,),
@@ -703,7 +704,7 @@ def frontpage(request, album_id=None, page=None):
         # 'photos': data['photos'],
         'is_photoset': data['is_photoset'],
         'last_geotagged_photo_id': Photo.objects.order_by('-latest_geotag').first().id
-    }))
+    })
 
 
 def frontpage_async_data(request):
@@ -1076,13 +1077,13 @@ def list_photo_selection(request):
                 count_with_location += 1
             p[1], p[2] = calculate_thumbnail_size_max_height(p[1], p[2], 300)
 
-    return render_to_response('photo_selection.html', RequestContext(request, {
+    return render(request, 'photo_selection.html', {
         'is_selection': True,
         'photos': photos,
         'at_least_one_photo_has_location': at_least_one_photo_has_location,
         'count_with_location': count_with_location,
         'whole_set_albums_selection_form': whole_set_albums_selection_form
-    }))
+    })
 
 
 def upload_photo_selection(request):
@@ -1140,9 +1141,9 @@ def videoslug(request, video_id, pseudo_slug=None):
     else:
         template = 'videoview.html'
 
-    return render_to_response(template, RequestContext(request, {
+    return render(request, template, {
         'video': video,
-    }))
+    })
 
 
 def photoslug(request, photo_id=None, pseudo_slug=None):
@@ -1344,11 +1345,11 @@ def photoslug(request, photo_id=None, pseudo_slug=None):
 def mapview_photo_upload_modal(request, photo_id):
     photo = get_object_or_404(Photo, pk=photo_id)
     licence = Licence.objects.get(url="https://creativecommons.org/licenses/by/2.0/")
-    return render_to_response('_photo_upload_modal.html', RequestContext(request, {
+    return render(request, '_photo_upload_modal.html', {
         'photo': photo,
         'licence': licence,
         'next': request.META["HTTP_REFERER"]
-    }))
+    })
 
 
 @ensure_csrf_cookie
@@ -1425,7 +1426,7 @@ def mapview(request, photo_id=None, rephoto_id=None):
     else:
         ret["title"] = _("Browse photos on map")
 
-    return render_to_response("mapview.html", RequestContext(request, ret))
+    return render(request, "mapview.html", ret)
 
 
 def map_objects_by_bounding_box(request):
@@ -1710,13 +1711,13 @@ def leaderboard(request, album_id=None):
         album_leaderboard = top_users
     else:
         if profile is None:
-            return render_to_response(template, RequestContext(request, {
+            return render(request, template, {
                 'is_top_50': False,
                 'title': _('Leaderboard'),
                 'hostname': 'https://%s' % (site.domain,),
                 'all_time_leaderboard': _get_all_time_leaderboard50()[:5],
                 'ajapaik_facebook_link': settings.AJAPAIK_FACEBOOK_LINK
-            }))
+            })
         _calculate_recent_activity_scores()
         profile_rank = Profile.objects.filter(score_recent_activity__gt=profile.score_recent_activity,
                                               first_name__isnull=False, last_name__isnull=False).count() + 1
@@ -1734,14 +1735,14 @@ def leaderboard(request, album_id=None):
             each.position = n
             n += 1
         general_leaderboard = nearby_users
-    return render_to_response(template, RequestContext(request, {
+    return render(request, template, {
         'is_top_50': False,
         'title': _('Leaderboard'),
         'hostname': 'https://%s' % (site.domain,),
         'leaderboard': general_leaderboard,
         'album_leaderboard': album_leaderboard,
         'ajapaik_facebook_link': settings.AJAPAIK_FACEBOOK_LINK
-    }))
+    })
 
 
 def all_time_leaderboard(request):
@@ -1753,12 +1754,12 @@ def all_time_leaderboard(request):
     atl = _get_all_time_leaderboard50(profile)
     template = '_block_leaderboard.html' if request.is_ajax() else 'leaderboard.html'
     site = Site.objects.get_current()
-    return render_to_response(template, RequestContext(request, {
+    return render(request, template, {
         'hostname': 'https://%s' % (site.domain,),
         'all_time_leaderboard': atl,
         'title': _('Leaderboard'),
         'is_top_50': True
-    }))
+    })
 
 
 def top50(request, album_id=None):
@@ -1797,7 +1798,7 @@ def top50(request, album_id=None):
     else:
         template = 'leaderboard.html'
     site = Site.objects.get_current()
-    return render_to_response(template, RequestContext(request, {
+    return render(request, template, {
         'activity_leaderboard': activity_leaderboard,
         'album_name': album_name,
         'album_leaderboard': album_leaderboard,
@@ -1806,7 +1807,7 @@ def top50(request, album_id=None):
         'title': _('Leaderboard'),
         'is_top_50': True,
         'ajapaik_facebook_link': settings.AJAPAIK_FACEBOOK_LINK
-    }))
+    })
 
 
 def difficulty_feedback(request):
@@ -1843,13 +1844,13 @@ def difficulty_feedback(request):
 
 
 def custom_404(request):
-    response = render_to_response("404.html", {}, context_instance=RequestContext(request))
+    response = render(request, "404.html")
     response.status_code = 404
     return response
 
 
 def custom_500(request):
-    response = render_to_response("500.html", {}, context_instance=RequestContext(request))
+    response = render(request, "500.html")
     response.status_code = 500
     return response
 
@@ -1907,7 +1908,7 @@ def curator(request):
         curator_random_image_ids = AlbumPhoto.objects.order_by('?').values_list('photo_id', flat=True)
     curator_random_images = Photo.objects.filter(pk__in=curator_random_image_ids)[:5]
     site = Site.objects.get_current()
-    return render_to_response('curator.html', RequestContext(request, {
+    return render(request, 'curator.html', {
         'description':
             _('Search for old photos, add them to Ajapaik, determine their locations and share the resulting album!'),
         'curator_random_images': curator_random_images,
@@ -1918,7 +1919,7 @@ def curator(request):
         'CURATOR_FLICKR_ENABLED': CURATOR_FLICKR_ENABLED,
         'ajapaik_facebook_link': settings.AJAPAIK_FACEBOOK_LINK,
         'whole_set_albums_selection_form': CuratorWholeSetAlbumsSelectionForm()
-    }))
+    })
 
 
 def _curator_get_records_by_ids(ids):
@@ -2596,7 +2597,7 @@ def newsletter(request, slug=None):
     else:
         ret['newsletters'] = Newsletter.objects.order_by('created')
 
-    return render_to_response('newsletter.html', RequestContext(request, ret))
+    return render(request, 'newsletter.html', ret)
 
 
 def submit_dating(request):
@@ -2775,7 +2776,7 @@ def donate(request):
     ret = {
         'is_donate': True
     }
-    return render_to_response('donate.html', RequestContext(request, ret))
+    return render(request, 'donate.html', ret)
 
 
 def photo_upload_choice(request):
@@ -2793,7 +2794,7 @@ def photo_upload_choice(request):
         'is_upload_choice': True
     }
 
-    return render_to_response('photo_upload_choice.html', RequestContext(request, ret))
+    return render(request, 'photo_upload_choice.html', ret)
 
 
 @user_passes_test(user_has_confirmed_email, login_url='/accounts/login/?next=user-upload')
@@ -2824,7 +2825,7 @@ def user_upload(request):
         form = UserPhotoUploadForm()
     ret['form'] = form
 
-    return render_to_response('user_upload.html', RequestContext(request, ret))
+    return render(request, 'user_upload.html', ret)
 
 
 @user_passes_test(user_has_confirmed_email, login_url='/accounts/login/?next=user-upload-add-album')
@@ -2842,7 +2843,7 @@ def user_upload_add_album(request):
         form = UserPhotoUploadAddAlbumForm(profile=request.user.profile)
     ret['form'] = form
 
-    return render_to_response('user_upload_add_album.html', RequestContext(request, ret))
+    return render(request, 'user_upload_add_album.html', ret)
 
 
 ################################################################################
@@ -2970,8 +2971,8 @@ class DeleteComment(View):
 
 
 def privacy(request):
-    return render_to_response('privacy.html', RequestContext(request, {}))
+    return render(request, 'privacy.html')
 
 
 def terms(request):
-    return render_to_response('terms.html', RequestContext(request, {}))
+    return render(request, 'terms.html')
