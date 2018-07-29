@@ -1,8 +1,8 @@
 from allauth.account.signals import email_confirmed
-from django.contrib.auth.models import User
 from django.dispatch import receiver
 
 from .utils import move_user_data
+#from django.contrib.auth.models import User
 
 
 @receiver(email_confirmed)

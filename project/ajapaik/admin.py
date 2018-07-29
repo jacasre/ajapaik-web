@@ -1,4 +1,4 @@
-import autocomplete_light
+import autocomplete_light.shortcuts as autocomplete_light
 from PIL import Image, ImageOps
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin

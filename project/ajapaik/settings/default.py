@@ -1,4 +1,6 @@
 # coding=utf-8
+
+SECRET_KEY = 'MY SECRET KEY' 
 import sys
 
 import os
@@ -9,7 +11,7 @@ gettext = lambda s: s
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
-DEBUG = False
+DEBUG = True
 
 DEFER_JAVASCRIPT = False
 
@@ -20,6 +22,9 @@ DATING_POINTS = 150
 DATING_CONFIRMATION_POINTS = 50
 
 CURATOR_FLICKR_ENABLED = False
+FLICKR_API_KEY = ''
+FLICKR_API_SECRET = ''
+
 CURATOR_THEN_AND_NOW_CREATION_DISABLED = True
 
 AJAPAIK_FACEBOOK_LINK = 'https://www.facebook.com/ajapaik'
@@ -54,10 +59,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'prod_database_name',
-        'USER': 'prod_user',
-        'PASSWORD': 'prod_p@ssword',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'gisdb',
+        'USER': 'rephoto',
+        'PASSWORD': 'foobarbiz123',
         'HOST': 'localhost',
         'PORT': '',
         'CONN_MAX_AGE': 600,
@@ -93,7 +98,6 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-SECRET_KEY = '!!! paste your own secret key here !!!'
 
 MIDDLEWARE_CLASSES = (
     # 'django.middleware.common.BrokenLinkEmailsMiddleware',
@@ -114,6 +118,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'project.ajapaik.urls'
+#ROOT_URLCONF = 'ajapaik.urls'
 
 SUBDOMAIN_URLCONFS = {
     None: 'project.ajapaik.urls',
@@ -157,7 +162,7 @@ TEMPLATES = [
 ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_REDIRECT_URL = '/'
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'test_without_migrations',
     'admin_tools',
     'admin_tools.theming',
@@ -169,6 +174,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'autocomplete_light',
     'django.contrib.admin',
     'django.contrib.sitemaps',
@@ -182,11 +188,11 @@ INSTALLED_APPS = (
     'rest_framework',
     'compressor',
     'modeltranslation',
-    'haystack',
+#    'haystack',
     'bootstrap3',
     'django_bootstrap_dynamic_formsets',
 
-    'registration',  # This app is required by
+#    'registration',  # This app is required by
     # 0081_create_social_network_accounts if it already applied you can remove
     # this app from INSTALLED_APPS and from virtual environment.
 
@@ -197,9 +203,12 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'project.mediawiki_allauth',
-)
+
+]
 
 ALLOWED_HOSTS = [
+    '*',
+    'localhost',
     '.ajapaik.ee',
     '217.146.78.74'
 ]

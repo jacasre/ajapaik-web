@@ -8,7 +8,7 @@ def migrate_users(apps, schema_editor):
     SocialAccount = apps.get_model('socialaccount', 'SocialAccount')
     EmailAddress = apps.get_model('account', 'EmailAddress')
     Profile = apps.get_model('ajapaik', 'Profile')
-    RegistrationProfile = apps.get_model('registration', 'RegistrationProfile')
+#    RegistrationProfile = apps.get_model('registration', 'RegistrationProfile')
     User = apps.get_model('auth', 'User')
 
 
@@ -152,7 +152,7 @@ def migrate_users(apps, schema_editor):
             profile.user.last_name = profile.last_name
 
     # E-mail registered accouts migration.
-    old_profiles = RegistrationProfile.objects.all().prefetch_related('user')
+    old_profiles = None #RegistrationProfile.objects.all().prefetch_related('user')
     for profile in old_profiles:
         email = profile.user.email
         if not email:
@@ -185,7 +185,7 @@ def migrate_users(apps, schema_editor):
         email__ne='',
         profile__fb_id__isnull=True,
         profile__google_plus_id__isnull=True,
-        registrationprofile__isnull=True,
+        #registrationprofile__isnull=True,
         emailaddress__isnull=True
     )
     for user in email_registered_users:
@@ -201,7 +201,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('ajapaik', '0080_auto_20180214_1055'),
-        ('registration', '0004_supervisedregistrationprofile'),
+ #       ('registration', '0004_supervisedregistrationprofile'),
         ('socialaccount', '0003_extra_data_default_dict'),
         ('account', '0002_email_max_length'),
         ('auth', '0006_require_contenttypes_0002'),

@@ -36,8 +36,8 @@ from django_comments_xtd.models import XtdComment, LIKEDIT_FLAG, DISLIKEDIT_FLAG
 from django_extensions.db.fields import json
 from geopy.distance import great_circle
 from haystack import connections
-from oauth2client.client import OAuth2Credentials
-from oauth2client.django_orm import FlowField, CredentialsField
+#from oauth2client.client import OAuth2Credentials
+#from oauth2client.django_orm import FlowField, CredentialsField
 from pandas import DataFrame, Series
 from requests import get
 from sklearn.cluster import DBSCAN
@@ -1093,7 +1093,7 @@ class Profile(Model):
 # For Google login
 class FlowModel(Model):
     id = OneToOneField(User, primary_key=True)
-    flow = FlowField()
+#    flow = FlowField()
 
     class Meta(object):
         db_table = 'project_flowmodel'
@@ -1102,7 +1102,7 @@ class FlowModel(Model):
 # For Google login
 class CredentialsModel(Model):
     id = OneToOneField(User, primary_key=True)
-    credential = CredentialsField()
+#    credential = CredentialsField()
 
     class Meta(object):
         db_table = 'project_credentialsmodel'
