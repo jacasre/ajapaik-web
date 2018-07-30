@@ -2,7 +2,7 @@ appdirs
 asn1crypto
 cffi
 cryptography
-Django==1.11.14
+Django
 django-admin-tools
 django-appconf
 django-autocomplete-light==2.3.3
@@ -24,7 +24,7 @@ django-mobi
 django-modeltranslation
 django-tastypie
 django-test-without-migrations
-djangorestframework==3.6
+djangorestframework
 docutils
 enum34
 feedparser
