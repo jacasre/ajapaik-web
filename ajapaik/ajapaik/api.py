@@ -128,6 +128,22 @@ class Login(APIView):
                     'verified_email': idinfo['email_verified'],
                 }
             )
+            if not login.is_existing:
+                account_signup_form = SignupForm(data={
+                    'email': idinfo['email'],
+                    'first_name':  idinfo['given_name'],
+                    'last_name':  idinfo['family_name'],
+                    'username': idinfo['name']
+                });
+                new_user = account_signup_form.save(request)
+                complete_signup(
+                    request,
+                    new_user,
+                    account_app_settings.EMAIL_VERIFICATION,
+                    None
+                )
+                login.connect(request, new_user)
+
             login.state = {
                 'auth_params': '',
                 'process': 'login',
