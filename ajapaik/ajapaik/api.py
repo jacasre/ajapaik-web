@@ -108,6 +108,7 @@ class Login(APIView):
         Returns user by ID token that we get from mobile application after user
         authentication there.
         '''
+        debugmsg='existing user'
         try:
             idinfo = id_token.verify_oauth2_token(
                 token, google_auth_requests.Request(), settings.GOOGLE_CLIENT_ID
@@ -143,6 +144,7 @@ class Login(APIView):
                     None
                 )
                 login.connect(request, new_user)
+                debugmsg='new user'
 
             login.state = {
                 'auth_params': '',
@@ -150,9 +152,9 @@ class Login(APIView):
                 'scope': ''
             }
             complete_social_login(request, login)
-            return login.user
-        except:
-            return None
+            return login.user, debugmsg
+        except Exception as e:
+            return None, str(e)
 
 
     def _authenticate_with_facebook(self, request, access_token):
@@ -177,6 +179,7 @@ class Login(APIView):
             return None
 
     def post(self, request, format=None):
+        debugmsg=''
         form = forms.APILoginForm(request.data)
         if form.is_valid():
             login_type = form.cleaned_data['type']
@@ -195,7 +198,7 @@ class Login(APIView):
                     get_adapter(request).login(request, user)
             elif login_type == forms.APILoginForm.LOGIN_TYPE_GOOGLE:
                 id_token = form.cleaned_data['username']
-                user = self._authenticate_with_google(request._request,
+                user, debugmsg = self._authenticate_with_google(request._request,
                                                       id_token)
             elif login_type == forms.APILoginForm.LOGIN_TYPE_FACEBOOK:
                 access_token = form.cleaned_data['password']
@@ -212,6 +215,7 @@ class Login(APIView):
                     'id': None,
                     'session': None,
                     'expires': None,
+                    'debug': debugmsg,
                 })
 
             if not request.session.session_key:
@@ -222,6 +226,7 @@ class Login(APIView):
                 'id': user.id,
                 'session': request.session.session_key,
                 'expires': request.session.get_expiry_age(),
+                'debug': debugmsg,
             })
         else:
             return Response({
@@ -229,6 +234,7 @@ class Login(APIView):
                 'id': None,
                 'session': None,
                 'expires': None,
+                'debug': debugmsg,
             })
 
 class Register(APIView):
