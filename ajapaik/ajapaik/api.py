@@ -136,15 +136,16 @@ class Login(APIView):
                     'last_name':  idinfo['family_name'],
                     'username': idinfo['name']
                 });
-                new_user = account_signup_form.save(request)
-                complete_signup(
-                    request,
-                    new_user,
-                    account_app_settings.EMAIL_VERIFICATION,
-                    None
-                )
-                login.connect(request, new_user)
-                debugmsg='new user'
+                if account_signup_form.is_valid():
+                    new_user = account_signup_form.save(request)
+                    complete_signup(
+                        request,
+                        new_user,
+                        account_app_settings.EMAIL_VERIFICATION,
+                        None
+                    )
+                    login.connect(request, new_user)
+                    debugmsg='new user'
 
             login.state = {
                 'auth_params': '',
