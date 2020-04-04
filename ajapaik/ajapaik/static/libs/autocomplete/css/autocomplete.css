@@ -89,7 +89,7 @@
  }
  
  input.autocomplete.xhr-pending {
-     background-image: url('xhr-pending.gif');
+     background-image: url('../img/xhr-pending.gif');
      background-repeat: no-repeat;
      background-position: right;
  }
@@ -129,7 +129,7 @@
  
  .autocomplete-light-widget .deck [data-value] .remove
  {
-     background-image: url('delete.png');
+     background-image: url('../img/delete.png');
      color: #fff;
      cursor: pointer;
      text-indent: -999px;

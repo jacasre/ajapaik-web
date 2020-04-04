@@ -2,7 +2,7 @@
 
 {% block specific_css %}
     {% compress css %}
-        <link rel="stylesheet" href="{% static "css/autocomplete.css" %}">
+        <link rel="stylesheet" href="{% static "libs/autocomplete/css/autocomplete.css" %}">
     {% endcompress %}
 {% endblock %}
 <div class="modal fade" id="ajapaik-choose-albums-modal">
@@ -58,8 +58,8 @@
 {% block specific_js %}
     {% compress js %}
         <script src="{% static "js/autocomplete.js" %}"></script>
-        <script src="{% static "js/autocomplete-user-upload-add-album.js" %}"></script>
-        <script src="{% static "js/autocomplete-user-upload-search-album.js" %}"></script>
+        <script src="{% static "libs/autocomplete/js/autocomplete-user-upload-add-album.js" %}"></script>
+        <script src="{% static "libs/autocomplete/js/autocomplete-user-upload-search-album.js" %}"></script>
     {% endcompress %}
     <script>
     $('.close-album-curation-modal').click(function (e) {

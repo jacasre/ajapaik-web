@@ -37,6 +37,8 @@ MEDIA_URL = '/media/'
 
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
 STATICFILES_DIRS = (
     '%s/ajapaik/ajapaik/static' % ABSOLUTE_PROJECT_ROOT,
 )
