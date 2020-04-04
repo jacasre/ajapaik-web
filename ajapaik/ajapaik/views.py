@@ -2184,15 +2184,12 @@ def curator_photo_upload_handler(request):
 						try:
 							new_photo = Photo(
 								user=profile,
-								author=upload_form.cleaned_data["creators"].encode('utf-8'),
-								description=upload_form.cleaned_data["title"].rstrip().encode('utf-8'),
+								author=upload_form.cleaned_data["creators"],
+								description=upload_form.cleaned_data["title"].rstrip(),
 								source=source,
-								types=upload_form.cleaned_data["types"].encode('utf-8') if upload_form.cleaned_data[
-									"types"] else None,
-								keywords=upload_form.cleaned_data["keywords"].strip().encode('utf-8') if
-								upload_form.cleaned_data["keywords"] else None,
-								date_text=upload_form.cleaned_data["date"].encode('utf-8') if
-								upload_form.cleaned_data["date"] else None,
+								types=upload_form.cleaned_data["types"] if upload_form.cleaned_data["types"] else None,
+								keywords=upload_form.cleaned_data["keywords"].strip() if upload_form.cleaned_data["keywords"] else None,
+								date_text=upload_form.cleaned_data["date"] if upload_form.cleaned_data["date"] else None,
 								licence=licence,
 								external_id=muis_id,
 								external_sub_id=muis_media_id,
