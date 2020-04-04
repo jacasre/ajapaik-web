@@ -113,36 +113,24 @@ function initializePersonAutocomplete(autocompleteId, genderSelect) {
               return;
           }
 
-          var uri = '/autocomplete/SubjectAlbumAutocomplete/?get-json=true&q=' + encodeURI(search);
+          var uri = '/autocomplete/subject-album-autocomplete/?get-json=true&q=' + encodeURI(search);
 
           var onSuccess = function(response) {
               var data = [];
 
               var currentSelectedValue = $('#' + autocompleteId).val();
-              var hasFoundData = response.indexOf('data-value') !== -1;
+              var hasFoundData = response && response.results && response.results.length > 0
 
               if (hasFoundData) {
-                  response
-                      .replace(new RegExp('&quot;', 'g'), '"')
-                      .replace(new RegExp('</span>', 'g'), ';')
-                      .replace(new RegExp('<span data-value="', 'g'), '')
-                      .replace(new RegExp('">', 'g'), '-')
-                      .split(';')
-                      .forEach(function(value) {
+                  response.results.forEach(function(value) {
                           if (!!value) {
-                              var parts = [value.substring(0, value.indexOf('-')) ,value.substring(value.indexOf('-')+1)]
-                              var personId = parts[0];
-
-                              var personData = JSON.parse(parts[1]);
-                              var personName = personData.name;
-                              var personGender = convertSavedPersonGenderToString(personData.gender);
-
-                              if (personId !== currentSelectedValue) {
+                            var nameAndGender = value.text.split(';');
+                            if (value.id !== currentSelectedValue) {
                                   data.push({
-                                      value: personId,
-                                      text: personName,
+                                      value: value.id,
+                                      text: nameAndGender[0],
                                       data: {
-                                          gender: personGender
+                                          gender: convertSavedPersonGenderToString(parseInt(nameAndGender[1]))
                                       }
                                   });
                               }

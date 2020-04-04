@@ -55,7 +55,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-12" id="ajapaik-curator-edit-album-error" class="d-none">
+                                <div class="col-12 d-none" id="ajapaik-curator-edit-album-error">
                                     <div class="alert alert-danger" role="alert">
                                         <span class="glyphicon glyphicon-exclamation-sign"
                                                 aria-hidden="true"></span>
@@ -709,7 +709,7 @@
                         window._gaq.push(['_trackEvent', 'Curator', 'Edit success']);
                     },
                     error: function () {
-                        $('#ajapaik-curator-edit-album-error').removeClass('d-block').addClass('d-none');
+                        $('#ajapaik-curator-edit-album-error').removeClass('d-none').addClass('d-block');
                         window._gaq.push(['_trackEvent', 'Curator', 'Edit error']);
                     }
                 });

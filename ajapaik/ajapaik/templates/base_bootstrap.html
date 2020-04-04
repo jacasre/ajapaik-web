@@ -3,6 +3,7 @@
 <html lang="{{ request.LANGUAGE_CODE }}" {% if is_game or is_mapview %} class="ajapaik-html-game-map"{% endif %}
       prefix="fb: http://www.facebook.com/2008/fbml">
 <head>
+    <meta name="theme-color" content="#303030">
     <title>
         {% if title %}
             {{ title }} - Ajapaik
@@ -497,8 +498,5 @@
     </script>
 {% endblock %}
 {% block specific_js %}{% endblock %}
-{% block autocomplete_stuff %}
-    {% include 'autocomplete_light/static.html' %}
-{% endblock %}
 </body>
 </html>

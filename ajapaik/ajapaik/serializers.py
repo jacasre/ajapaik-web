@@ -1,6 +1,6 @@
 import logging
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db.models import Count, Q, Case, When, Value, BooleanField, \
     IntegerField
 from rest_framework import serializers

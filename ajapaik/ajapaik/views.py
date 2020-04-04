@@ -30,7 +30,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.files.temp import NamedTemporaryFile
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db.models import Sum, Q, Count, F
 from django.http import HttpResponse, JsonResponse
 from django.http.multipartparser import MultiPartParser
@@ -1310,7 +1310,7 @@ def photoslug(request, photo_id=None, pseudo_slug=None):
 	for each in previous_datings:
 		each.this_user_has_confirmed = each.confirmations.filter(profile=profile).exists()
 	serialized_datings = DatingSerializer(previous_datings, many=True).data
-	serialized_datings = JSONRenderer().render(serialized_datings)
+	serialized_datings = JSONRenderer().render(serialized_datings).decode("utf-8")
 
 	strings = []
 	if photo_obj.source:

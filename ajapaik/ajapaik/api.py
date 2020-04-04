@@ -94,11 +94,11 @@ class Login(APIView):
     permission_classes = (AllowAny,)
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
-    def _authenticate_by_email(self, email, password):
+    def _authenticate_by_email(self, request, email, password):
         '''
         Authenticate user with email and password.
         '''
-        user = authenticate(email=email, password=password)
+        user = authenticate(request=request, email=email, password=password)
         if user is not None and not user.is_active:
             # We found user but this user is disabled. "authenticate" doesn't
             # check is user is disabled(at least in Django 1.8).
@@ -176,7 +176,7 @@ class Login(APIView):
                         'session': None,
                         'expires': None,
                     })
-                user = self._authenticate_by_email(email, password)
+                user = self._authenticate_by_email(request, email, password)
                 if user is not None:
                     get_adapter(request).login(request, user)
             elif login_type == forms.APILoginForm.LOGIN_TYPE_GOOGLE:
