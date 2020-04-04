@@ -376,21 +376,13 @@ class VideoStillCaptureForm(forms.Form):
     timestamp = forms.IntegerField()
 
 
-class UserPhotoUploadForm(forms.Form):
-    albums = forms.ModelMultipleChoiceField(
-        queryset=Album.objects.all(),
-        required=True,
-        widget=autocomplete.ModelSelect2(url='public-album-autocomplete')
-    )
-    licence = forms.ModelChoiceField(label=_('Licence'), queryset=Licence.objects.filter(is_public=True),
-                                     required=False)
-    uploader_is_author = forms.BooleanField(label=_('I am the author'), required=False)
+class UserPhotoUploadForm(forms.ModelForm):
 
     class Meta:
         model = Photo
-        fields = ('image', 'description', 'author', 'uploader_is_author', 'licence', 'albums')
+        fields = ('image', 'description', 'author', 'uploader_is_author', 'licence')
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 1, 'cols': 40})
+            'description': forms.Textarea(attrs={'rows': 1, 'cols': 40}),
         }
 
     def clean(self):

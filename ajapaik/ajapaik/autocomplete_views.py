@@ -2,12 +2,16 @@ from dal import autocomplete
 from django.conf.urls import url
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.http.response import HttpResponse
 from ajapaik.ajapaik.models import Album, AlbumPhoto, Area, Dating, DatingConfirmation, Device, GeoTag, ImageSimilarity, \
      ImageSimilarityGuess, Licence, Photo, Points, Profile, Skip, Source, Transcription, User, Video
 from ajapaik.ajapaik_face_recognition.models import FaceRecognitionRectangle, FaceRecognitionRectangleFeedback, \
      FaceRecognitionUserGuess, FaceRecognitionRectangleSubjectDataGuess
 from ajapaik.ajapaik_object_recognition.models import ObjectDetectionAnnotation, ObjectAnnotationClass, ObjectAnnotationFeedback
-from rest_framework.views import APIView, exception_handler
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.views import APIView
+
+
 
 class AlbumAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
@@ -250,17 +254,27 @@ class ProfileAutocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
-class PublicAlbumAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
+class PublicAlbumAutocomplete(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, format=None):
         if not self.request.user.is_authenticated:
             return Album.objects.none()
+        
+        q = request.GET.get('q')
+        exclude = request.GET.getlist('exclude')
 
-        qs = Album.objects.all()
+        qs = Album.objects.all().exclude(id__in=exclude)
 
-        if self.q:
-            qs = qs.filter(name__istartswith=self.q, is_public=True)
+        if q:
+            qs = qs.filter(name__istartswith=q, is_public=True)
 
-        return qs
+        result = """<span class="block"><em>No matches found</em></span>"""
+        if len(qs) > 0:
+            result = ""
+            for q in qs:
+                result+= "<span data-value=" + str(q.id) + ">" + q.name + "</span>"
+        return HttpResponse(result, status=200)
 
 class SkipAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):

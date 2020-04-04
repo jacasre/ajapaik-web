@@ -1101,14 +1101,13 @@ def list_photo_selection(request):
 
 def upload_photo_selection(request):
 	form = SelectionUploadForm(request.POST)
-	album_selection_form = CuratorWholeSetAlbumsSelectionForm(request.POST)
 	context = {
 		'ajapaik_facebook_link': settings.AJAPAIK_FACEBOOK_LINK,
 		'error': False
 	}
 	profile = request.get_user().profile
-	if form.is_valid() and profile.is_legit() and album_selection_form.is_valid():
-		albums = album_selection_form.cleaned_data['albums']
+	if form.is_valid() and profile.is_legit():
+		albums = Album.objects.filter(id__in=request.POST.getlist('albums'))
 		photo_ids = json.loads(form.cleaned_data['selection'])
 		if len(albums) > 0:
 			pass
@@ -2083,30 +2082,6 @@ def curator_photo_upload_handler(request):
 
 	selection_json = request.POST.get("selection") or None
 	selection = None
-	# TODO: We need to override some values coming from sources, but we cannot really allow random stuff, what to do?
-	# if selection_json is not None:
-	#     # Query again to block porn
-	#     parsed_selection = json.loads(selection_json)
-	#     ids = [k for k, v in parsed_selection.items()]
-	#     response = _curator_get_records_by_ids(ids)
-	#     parsed_response = json.loads(response.text)["result"]
-	#     parsed_kv = {}
-	#     for each in parsed_response:
-	#         parsed_kv[each["id"]] = each
-	#     for k, v in parsed_selection.items():
-	#         for sk, sv in parsed_kv[k].items():
-	#             # Some fields we don't want overwritten
-	#             # FIXME: This now defeats the purpose of re-querying...
-	#             if parsed_selection[k]["collections"] == 'DIGAR' and (sk == 'imageUrl' or sk == 'identifyingNumber'
-	#                                                                   or sk == 'urlToRecord' or sk == 'institution'
-	#                                                                   or sk == 'description'):
-	#                 continue
-	#             elif parsed_selection[k]['institution'] == 'ETERA' and (sk == 'identifyingNumber'):
-	#                 continue
-	#             else:
-	#                 parsed_selection[k][sk] = sv
-	#     selection = parsed_selection
-
 	if selection_json is not None:
 		selection = json.loads(selection_json)
 
@@ -2117,7 +2092,7 @@ def curator_photo_upload_handler(request):
 	}
 
 	if selection and len(selection) > 0 and profile is not None and curator_album_selection_form.is_valid():
-		general_albums = curator_album_selection_form.cleaned_data['albums']
+		general_albums = Album.objects.filter(id__in=request.POST.getlist('albums'))
 		if len(general_albums) > 0:
 			context["album_id"] = general_albums[0].pk
 		else:
@@ -2798,10 +2773,11 @@ def user_upload(request):
 			photo.save()
 			photo.set_aspect_ratio()
 			photo.find_similar()
-			for each in form.cleaned_data['albums']:
+			albums=request.POST.getlist('albums')
+			for each in albums:
 				AlbumPhoto(
 					photo=photo,
-					album=each,
+					album=Album.objects.filter(id=each).first(),
 					type=AlbumPhoto.UPLOADED,
 					profile=request.user.profile
 				).save()
